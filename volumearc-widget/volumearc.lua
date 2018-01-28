@@ -19,7 +19,18 @@ local INC_VOLUME_CMD = 'amixer -D pulse sset Master 5%+'
 local DEC_VOLUME_CMD = 'amixer -D pulse sset Master 5%-'
 local TOG_VOLUME_CMD = 'amixer -D pulse sset Master toggle'
 
+-- volume text
+local text = wibox.widget {
+    id = "txt",
+		font = "Play 5",
+		widget = wibox.widget.textbox
+}
+
+-- mirror the text, because the whole widget will be mirrored after
+local mirrored_text = wibox.container.mirror(text, { horizontal = true })
+
 local volumearc = wibox.widget {
+    mirrored_text,
     max_value = 1,
     thickness = 2,
     start_angle = 4.71238898, -- 2pi*3/4
@@ -43,6 +54,8 @@ local update_graphic = function(widget, stdout, _, _, _)
     else
         widget.colors = { beautiful.widget_main_color }
     end
+
+		text.text = volume
 end
 
 volumearc:connect_signal("button::press", function(_, _, _, button)
